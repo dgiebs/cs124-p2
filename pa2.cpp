@@ -11,6 +11,7 @@ using namespace std;
 
 int* conventional(int*, int*, int);
 int* strassens(int*, int*, int);
+int* matrix_add_sub(int*, int*, int, bool);
 int nextPower2(int);
 
 tuple<int*, int*, int> matrixify(char* infile, int dimension);
