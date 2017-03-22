@@ -14,7 +14,7 @@ int* conventional(int*, int*, int);
 int* strassens(int*, int*, int);
 int nextPower2(int);
 
-pair<int*, int> matrixify(char* infile, int dimension);
+tuple<int*, int*, int> matrixify(char* infile, int dimension);
 
 int main( int argc, char *argv[])
 {
@@ -43,19 +43,33 @@ int nextPower2(int n){
 }
 
 // convert file to matrix w d = 2^k
-pair<int*, int> matrixfiy(char* inputfile, int dimension){
+tuple<int*, int*, int> matrixfiy(char* inputfile, int dimension){
 	ifstream infile(inputfile);
 	string str;
 	int col_counter = 0;
 	int row_counter = 0;
 
+	// pad matrix w 0's up to next power of 2
 	int padded_dimension = nextPower2(dimension);
-
 	int inmatrixA [padded_dimension][padded_dimension] = {0};
 	int inmatrixB [padded_dimension][padded_dimension] = {0};
 	while (getline(infile, str)){
-		// fill in matrix
+		// fill in matrices
+		if (row_counter < dimension){
+			inmatrixA[row_counter][col_counter] = stoi(str);
+		} else {
+			inmatrixB[row_counter - dimension][col_counter] = stoi(str);
+		}
+
+		row_counter++;
+		col_counter++;
+		// reset col to 0 when dimension reached
+		if (col_counter >= dimension){
+			col_counter = 0;
+		}
 	}
+
+	return make_tuple(inmatrixA, inmatrixB, padded_dimension);
 }
 
 int* conventional(int* a, int* b, n){
