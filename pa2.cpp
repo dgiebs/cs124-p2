@@ -4,7 +4,6 @@
 #include <numeric>
 #include <stdio.h>
 #include <stdlib.h>
-#include "min_heap.h"
 
 using namespace std;
 
@@ -72,18 +71,23 @@ tuple<int*, int*, int> matrixfiy(char* inputfile, int dimension){
 	return make_tuple(inmatrixA, inmatrixB, padded_dimension);
 }
 
-int* conventional(int* a, int* b, n){
-	int [pow(n, 2)] value;
+int* conventional(tuple<int*, int*, int> inpt){
+	int n = get<2>(inpt);
+	int *a = get<0>(inpt);
+	int *b = get<1>(inpt);
 
-	for (i = 0; i < pow(n, 2); i += n){
-		for (j = 0; j < n; j++){
-			tmp = 0
-			for (k = 0; k < n; k++ ){// second matrix iteration
+	int* value =  new int[(int)pow(n, 2)];
+
+	for (int i = 0; i < pow(n, 2); i += n){
+		for (int j = 0; j < n; j++){
+			int tmp = 0;
+			for (int k = 0; k < n; k++){// second matrix iteration
 				tmp += a[i + k] * b[k*n + j];
 			}
-			value [i + j] = tmp
+			value [i + j] = tmp;
 		}
 	}
+	return value;
 }
 
 int* strassens(int* a, int* b, n){
