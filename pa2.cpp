@@ -1,6 +1,8 @@
 #include <iostream>
+#include <fstream>
 #include <time.h>
 #include <cmath>
+#include <tuple>
 #include <numeric>
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,7 +15,7 @@ int* conventional(int*, int*, int);
 int* strassens(int*, int*, int);
 int nextPower2(int);
 
-tuple<int*, int*, int> matrixify(char* infile, int dimension);
+tuple<int*, int*, int> matrixify(char*, int);
 
 int main( int argc, char *argv[])
 {
@@ -23,7 +25,7 @@ int main( int argc, char *argv[])
 	}
 
 	int dimension = atoi(argv[2]);
-	inputfile = argv[3];
+	string inputfile = argv[3];
 }
 
 // from http://www.geeksforgeeks.org/smallest-power-of-2-greater-than-or-equal-to-n/
@@ -42,7 +44,7 @@ int nextPower2(int n){
 }
 
 // convert file to matrix w d = 2^k
-tuple<int*, int*, int> matrixfiy(char* inputfile, int dimension){
+tuple<int*, int*, int> matrixify(char* inputfile, int dimension){
 	ifstream infile(inputfile);
 	string str;
 	int col_counter = 0;
@@ -55,9 +57,9 @@ tuple<int*, int*, int> matrixfiy(char* inputfile, int dimension){
 	while (getline(infile, str)){
 		// fill in matrices
 		if (row_counter < dimension){
-			inmatrixA[row_counter][col_counter] = stoi(str);
+			inmatrixA[row_counter][col_counter] = atoi(str.c_str());
 		} else {
-			inmatrixB[row_counter - dimension][col_counter] = stoi(str);
+			inmatrixB[row_counter - dimension][col_counter] = atoi(str.c_str());
 		}
 
 		row_counter++;
@@ -68,7 +70,11 @@ tuple<int*, int*, int> matrixfiy(char* inputfile, int dimension){
 		}
 	}
 
-	return make_tuple(inmatrixA, inmatrixB, padded_dimension);
+	int (*matA) = (int*) inmatrixA;
+	int (*matB) = (int*) inmatrixB;
+
+	tuple<int*, int*, int> res = make_tuple(matA, matB, padded_dimension);
+	return res;
 }
 
 int* conventional(tuple<int*, int*, int> inpt){
