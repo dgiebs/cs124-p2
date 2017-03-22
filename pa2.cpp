@@ -70,6 +70,7 @@ tuple<int*, int*, int> matrixify(char* inputfile, int dimension){
 		}
 	}
 
+	// pointers to first element of each 2D array. NB: 2D arrays are stored as 1D arrays of arrays
 	int (*matA) = (int*) inmatrixA;
 	int (*matB) = (int*) inmatrixB;
 
@@ -96,6 +97,6 @@ int* conventional(tuple<int*, int*, int> inpt){
 	return value;
 }
 
-int* strassens(int* a, int* b, n){
+int* strassens(tuple<int*, int*, int> inpt){
 
 }
