@@ -56,7 +56,7 @@ int main(){
 }
 
 vector<vector<int>> conventional(vector<vector<int>> a, vector<vector<int>> b){
-	
+
 	int n = (int)a.size();
 	vector<vector<int>> result (n, vector<int> (n, 0));
 
@@ -71,7 +71,7 @@ vector<vector<int>> conventional(vector<vector<int>> a, vector<vector<int>> b){
 }
 
 vector<vector<int>> strassens(vector<vector<int>> a, vector<vector<int>> b){
-	
+
 	int n = (int)a.size();
 	vector<vector<int>> result (n, vector<int> (n, 0));
 
@@ -125,7 +125,7 @@ vector<vector<int>> strassens(vector<vector<int>> a, vector<vector<int>> b){
 }
 
 vector<vector<int>> add_sub(vector<vector<int>> a, vector<vector<int>> b, bool add){
-	
+
 	int n = (int)a.size();
 	vector<vector<int>> result (n, vector<int> (n, 0));
 
