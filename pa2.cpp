@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <tuple>
 #include <vector>
+#include <fstream>
 
 using namespace std;
 
@@ -14,9 +15,8 @@ using namespace std;
 vector<vector<int>> conventional(vector<vector<int>>, vector<vector<int>>);
 vector<vector<int>> strassens(vector<vector<int>>, vector<vector<int>>);
 vector<vector<int>> add_sub(vector<vector<int>>, vector<vector<int>>, bool);
+tuple<vector<vector<int>>, vector<vector<int>>> matrixify(char*, int);
 int nextPower2(int);
-
-tuple<int*, int*, int> matrixify(char* infile, int dimension);
 
 int main( int argc, char *argv[])
 {
@@ -26,7 +26,11 @@ int main( int argc, char *argv[])
 	}
 
 	int n = atoi(argv[2]);
-	inputfile = argv[3];
+	char* inpt = argv[3];
+
+	tuple<vector<vector<int>>, vector<vector<int>>> padded = matrixify(inpt, n);
+	vector<vector<int>> a = get<0>(padded);
+	vector<vector<int>> b = get<1>(padded);
 
 	//assumed that there are two 2d vectors a and b from here on out
 
@@ -59,9 +63,9 @@ int main( int argc, char *argv[])
 	}
 	printf("timing: %f \n", timing);
 
-    clock_t begin = clock();
+    begin = clock();
     vector<vector<int>> strassen = strassens(a, b);
-	clock_t end = clock();
+	end = clock();
 	timing = (double)(end - begin) / CLOCKS_PER_SEC;
 
 	for (int i = 0; i < n; i++){
@@ -90,33 +94,30 @@ int nextPower2(int n){
 }
 
 // convert file to matrix w d = 2^k
-tuple<int*, int*, int> matrixfiy(char* inputfile, int dimension){
-	ifstream infile(inputfile);
+tuple<vector<vector<int>>, vector<vector<int>>> matrixify(char* inpt, int n){
+	ifstream infile(inpt);
 	string str;
-	int col_counter = 0;
-	int row_counter = 0;
+	int i = 0;
+	int j = 0;
 
 	// pad matrix w 0's up to next power of 2
-	int padded_dimension = nextPower2(dimension);
-	int inmatrixA [padded_dimension][padded_dimension] = {0};
-	int inmatrixB [padded_dimension][padded_dimension] = {0};
-	while (getline(infile, str)){
-		// fill in matrices
-		if (row_counter < dimension){
-			inmatrixA[row_counter][col_counter] = stoi(str);
-		} else {
-			inmatrixB[row_counter - dimension][col_counter] = stoi(str);
+	int new_n = nextPower2(n);
+	vector<vector<int>> a (new_n, vector<int> (new_n, 0));
+	vector<vector<int>> b (new_n, vector<int> (new_n, 0));
+	for (int i = 0; i < n; i++){
+		for (int j = 0; j < n; j++){
+			infile >> str;
+			a[i][j] = stoi(str);
 		}
-
-		row_counter++;
-		col_counter++;
-		// reset col to 0 when dimension reached
-		if (col_counter >= dimension){
-			col_counter = 0;
+	}
+	for (int i = 0; i < n; i++){
+		for (int j = 0; j < n; j++){
+			infile >> str;
+			b[i][j] = stoi(str);
 		}
 	}
 
-	return make_tuple(inmatrixA, inmatrixB, padded_dimension);
+	return make_tuple(a, b);
 }
 
 vector<vector<int>> conventional(vector<vector<int>> a, vector<vector<int>> b){
