@@ -38,18 +38,19 @@ int main( int argc, char *argv[])
 		for (int j = 0; j < n; j++){
 			printf("%i ", a[i][j]);
 		}
-		printf("\n");
+		//printf("\n");
 	}
-	printf("\n");
+	//printf("\n");
 
 	for (int i = 0; i < n; i++){
 		for (int j = 0; j < n; j++){
-			printf("%i ", b[i][j]);
+			//printf("%i ", b[i][j]);
 		}
-		printf("\n");
+		//printf("\n");
 	}
-	printf("\n");
+	//printf("\n");
 
+    printf("STARTING CONVENTIONAL\n");
     clock_t begin = clock();
     vector<vector<int>> convent = conventional(a, b);
 	clock_t end = clock();
@@ -61,8 +62,9 @@ int main( int argc, char *argv[])
 		}
 		printf("\n");
 	}
-	printf("timing: %f \n", timing);
+	printf("conventional timing: %f \n", timing);
 
+    printf("STARTING STRASSEN\n");
     begin = clock();
     vector<vector<int>> strassen = strassens(a, b);
 	end = clock();
@@ -74,7 +76,7 @@ int main( int argc, char *argv[])
 		}
 		printf("\n");
 	}
-	printf("timing: %f \n", timing);
+	printf("strassen timing: %f \n", timing);
 
 }
 
@@ -107,13 +109,13 @@ tuple<vector<vector<int>>, vector<vector<int>>> matrixify(char* inpt, int n){
 	for (int i = 0; i < n; i++){
 		for (int j = 0; j < n; j++){
 			infile >> str;
-			a[i][j] = stoi(str);
+			a[i][j] = atoi(str.c_str());
 		}
 	}
 	for (int i = 0; i < n; i++){
 		for (int j = 0; j < n; j++){
 			infile >> str;
-			b[i][j] = stoi(str);
+			b[i][j] = atoi(str.c_str());
 		}
 	}
 
@@ -140,8 +142,8 @@ vector<vector<int>> strassens(vector<vector<int>> a, vector<vector<int>> b){
 	int n = (int)a.size();
 	vector<vector<int>> result (n, vector<int> (n, 0));
 
-	if (n == 1){
-		result[0][0] = a[0][0]*b[0][0];
+	if (n <= STR_BASE){
+		result = conventional(a, b);
 		return result;
 	}
 	else{
