@@ -42,7 +42,6 @@ int main(int argc, char *argv[])
 	for (int i = 0; i < n; i++){
 		printf("%i\n", strassen->at(i)[i]);
 	}
-	printf("timing: %f \n", timing);
 
 }
 
@@ -75,13 +74,13 @@ tuple<vector<vector<int>>*, vector<vector<int>>*> matrixify(char* inpt, int n){
 	for (int i = 0; i < n; i++){
 		for (int j = 0; j < n; j++){
 			infile >> str;
-			a->at(i)[j] = stoi(str);
+			a->at(i)[j] = atoi(str.c_str());
 		}
 	}
 	for (int i = 0; i < n; i++){
 		for (int j = 0; j < n; j++){
 			infile >> str;
-			b->at(i)[j] = stoi(str);
+			b->at(i)[j] = atoi(str.c_str());
 		}
 	}
 
@@ -115,7 +114,7 @@ vector<vector<int>>* strassens(vector<vector<int>>* a, vector<vector<int>>* b){
 	}
 	else{
 
-
+		// arrange submatrices
 		int new_n = n/2;
 		vector<vector<vector<int>>>* sub_a = new vector<vector<vector<int>>> (4, vector<vector<int>> (new_n, vector<int> (new_n)));
 		vector<vector<vector<int>>>* sub_b = new vector<vector<vector<int>>> (4, vector<vector<int>> (new_n, vector<int> (new_n)));
@@ -131,6 +130,7 @@ vector<vector<int>>* strassens(vector<vector<int>>* a, vector<vector<int>>* b){
 			}
 		}
 
+		// calculate componenets of strassens
 		vector<vector<int>>* p1 = strassens(&sub_a->at(0), add_sub(&sub_b->at(1), &sub_b->at(3), false));
 		vector<vector<int>>* p2 = strassens(add_sub(&sub_a->at(0), &sub_a->at(1), true), &sub_b->at(3));
 		vector<vector<int>>* p3 = strassens(add_sub(&sub_a->at(2), &sub_a->at(3), true), &sub_b->at(0));
@@ -145,6 +145,7 @@ vector<vector<int>>* strassens(vector<vector<int>>* a, vector<vector<int>>* b){
 		vector<vector<int>>* quad2 = add_sub(p3, p4, true);
 		vector<vector<int>>* quad3 = add_sub(add_sub(p1, p7, false), add_sub(p5, p3, false), true);
 
+		//rerrange 4 matrices into the result, return value
 		quads->at(0) = *quad0;
 		quads->at(1) = *quad1;
 		quads->at(2) = *quad2;
@@ -167,6 +168,7 @@ vector<vector<int>>* strassens(vector<vector<int>>* a, vector<vector<int>>* b){
 	}
 }
 
+//add or subtract matrices
 vector<vector<int>>* add_sub(vector<vector<int>>* a, vector<vector<int>>* b, bool add){
 
 	int n = (int)a->size();
