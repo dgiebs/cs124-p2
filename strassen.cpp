@@ -10,24 +10,23 @@
 
 using namespace std;
 
-#define STR_BASE 8
+#define STR_BASE 90
 
 vector<vector<int>>* conventional(vector<vector<int>>*, vector<vector<int>>*);
-vector<vector<int>>* strassens(vector<vector<int>>*, vector<vector<int>>*, int);
+vector<vector<int>>* strassens(vector<vector<int>>*, vector<vector<int>>*);
 vector<vector<int>>* add_sub(vector<vector<int>>*, vector<vector<int>>*, bool);
 tuple<vector<vector<int>>*, vector<vector<int>>*> matrixify(char*, int);
 int nextPower2(int);
 
 int main(int argc, char *argv[])
 {
-	if (argc != 5){
+	if (argc != 4){
 		printf("Incorrect number of parameters\n");
 		return 0;
 	}
 
 	int n = atoi(argv[2]);
 	char* inpt = argv[3];
-	int str_base = atoi(argv[4]);
 
 	tuple<vector<vector<int>>*, vector<vector<int>>*> padded = matrixify(inpt, n);
 	vector<vector<int>>* a = get<0>(padded);
@@ -36,7 +35,7 @@ int main(int argc, char *argv[])
 	vector<vector<int>> &br = *b;
 
     clock_t begin = clock();
-    vector<vector<int>>* strassen = strassens(a, b, str_base);
+    vector<vector<int>>* strassen = strassens(a, b);
 	clock_t end = clock();
 	double timing = (double)(end - begin) / CLOCKS_PER_SEC;
 
@@ -105,16 +104,12 @@ vector<vector<int>>* conventional(vector<vector<int>>* a, vector<vector<int>>* b
 	return result;
 }
 
-vector<vector<int>>* strassens(vector<vector<int>>* a, vector<vector<int>>* b, int str_base){
+vector<vector<int>>* strassens(vector<vector<int>>* a, vector<vector<int>>* b){
 
 	int n = (int)a->size();
 	vector<vector<int>>* result = new vector<vector<int>> (n, vector<int> (n));
 
-	if (n == 1){
-		result->at(0)[0] = a->at(0)[0]*b->at(0)[0];
-		return result;
-	}
-	else if (n <= str_base){
+	if (n <= STR_BASE){
 		result = conventional(a, b);
 		return result;
 	}
@@ -136,13 +131,13 @@ vector<vector<int>>* strassens(vector<vector<int>>* a, vector<vector<int>>* b, i
 			}
 		}
 
-		vector<vector<int>>* p1 = strassens(&sub_a->at(0), add_sub(&sub_b->at(1), &sub_b->at(3), false), str_base);
-		vector<vector<int>>* p2 = strassens(add_sub(&sub_a->at(0), &sub_a->at(1), true), &sub_b->at(3), str_base);
-		vector<vector<int>>* p3 = strassens(add_sub(&sub_a->at(2), &sub_a->at(3), true), &sub_b->at(0), str_base);
-		vector<vector<int>>* p4 = strassens(&sub_a->at(3), add_sub(&sub_b->at(2), &sub_b->at(0), false), str_base);
-		vector<vector<int>>* p5 = strassens(add_sub(&sub_a->at(0), &sub_a->at(3), true), add_sub(&sub_b->at(0), &sub_b->at(3), true), str_base);
-		vector<vector<int>>* p6 = strassens(add_sub(&sub_a->at(1), &sub_a->at(3), false), add_sub(&sub_b->at(2), &sub_b->at(3), true), str_base);
-		vector<vector<int>>* p7 = strassens(add_sub(&sub_a->at(0), &sub_a->at(2), false), add_sub(&sub_b->at(0), &sub_b->at(1), true), str_base);
+		vector<vector<int>>* p1 = strassens(&sub_a->at(0), add_sub(&sub_b->at(1), &sub_b->at(3), false));
+		vector<vector<int>>* p2 = strassens(add_sub(&sub_a->at(0), &sub_a->at(1), true), &sub_b->at(3));
+		vector<vector<int>>* p3 = strassens(add_sub(&sub_a->at(2), &sub_a->at(3), true), &sub_b->at(0));
+		vector<vector<int>>* p4 = strassens(&sub_a->at(3), add_sub(&sub_b->at(2), &sub_b->at(0), false));
+		vector<vector<int>>* p5 = strassens(add_sub(&sub_a->at(0), &sub_a->at(3), true), add_sub(&sub_b->at(0), &sub_b->at(3), true));
+		vector<vector<int>>* p6 = strassens(add_sub(&sub_a->at(1), &sub_a->at(3), false), add_sub(&sub_b->at(2), &sub_b->at(3), true));
+		vector<vector<int>>* p7 = strassens(add_sub(&sub_a->at(0), &sub_a->at(2), false), add_sub(&sub_b->at(0), &sub_b->at(1), true));
 
 		vector<vector<vector<int>>>* quads = new vector<vector<vector<int>>> (4, vector<vector<int>> (new_n, vector<int> (new_n)));
 		vector<vector<int>>* quad0 = add_sub(add_sub(p5, p6, true), add_sub(p4, p2, false), true);
